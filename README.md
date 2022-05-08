@@ -29,4 +29,20 @@ Ziel ist es ein kleines Multi-Media-Center aufzubauen. Mit diesem sollen folgend
     - **filename** = name of the file to safe (either with .wav or without (then added autom.))
 - functionality:
   This function prepares the recording with the given device, chooses the correct samplerate and then starts recording
-  in new thread. **To stop recording**, just set the global variable stop to value false. 
+  in new thread. **To stop recording**, just set the global variable stop to value true.
+
+## Video 
+### with cam 
+
+- file video_recording.py 
+- method: prepare_rec(device_id=0, filename=None)
+- params: 
+  - **device_id** = index of device from cv2 VideoCapture 
+  - **filename** = name of the file to safe (either with .avi or without (then added autom.))
+- functionality: 
+  This function prepares the recording with the given device and then starts the recording in new thread. 
+  **To stop recording**, just set the global variable stop to value true. 
+- problems:
+  There is no chance to get name of available cameras (just possible to get indexes). 
+  cv2 is very slow. Takes much time to start recording. 
+  At the moment sound won't be recorded. 

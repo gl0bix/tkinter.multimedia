@@ -3,6 +3,7 @@ import sounddevice
 import soundfile
 import tkinter
 import threading
+import datetime
 import numpy
 
 assert numpy
@@ -28,7 +29,9 @@ def start_recording(filename, device_id, sample_rate):
                     break
 
 
-def prepare_rec(device_id, filename="unnamed"):
+def prepare_rec(device_id=1, filename=None):
+    if not filename:
+        filename = "unnamed_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".wav"
     if filename.strip()[-3:] != "wav":
         filename = filename.strip() + ".wav"
     samplerate = sounddevice.query_devices()[device_id]["default_samplerate"]
