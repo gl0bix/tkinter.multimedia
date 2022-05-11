@@ -1,10 +1,11 @@
+import datetime
 import queue
+import threading
+import tkinter
+
+import numpy
 import sounddevice
 import soundfile
-import tkinter
-import threading
-import datetime
-import numpy
 
 assert numpy
 
@@ -44,6 +45,11 @@ def stop_rec():
     root.destroy()
 
 
+"""
+get device list with: 'python3 -m sounddevice'
+then check for devices with at least one input channel
+adjust device_id accordingly
+"""
 if __name__ == "__main__":
     stop = False
     root = tkinter.Tk()
