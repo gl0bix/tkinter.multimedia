@@ -1,4 +1,11 @@
-sounddevice~=0.4.4
-SoundFile~=0.10.3.post1
-numpy~=1.22.3
-opencv-python~=4.5.5.64
+av==9.2.0
+cffi==1.15.0
+imageio==2.19.2
+imageio-ffmpeg==0.4.7
+numpy==1.22.3
+opencv-python==4.5.5.64
+Pillow==9.1.0
+pycparser==2.21
+python-vlc==3.0.16120
+sounddevice==0.4.4
+SoundFile==0.10.3.post1
