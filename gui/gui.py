@@ -1,12 +1,17 @@
 import tkinter as tk
 import tkinter.filedialog as files
+
 import vlc
 from PIL import Image, ImageTk
 from PIL.Image import Resampling
 
-if __name__ == '__main__':
+
+def init_main_window():
     window = tk.Tk()
     window.title('Tkinter Multimedia Player')
+
+    # window.tk.call("source", "assets/azure.tcl")
+    # window.tk.call("set_theme", "dark")
 
     # file actions
     # files.asksaveasfilename()
@@ -40,16 +45,18 @@ if __name__ == '__main__':
     # video player section
     frm_video = tk.Frame(master=window, width=500, height=500)
 
-    Instance = vlc.Instance()
-    player = Instance.media_player_new()
-    Media = Instance.media_new('assets/videos/example.mp4')
+    instance = vlc.Instance()
+    player = instance.media_player_new()
+    media = instance.media_new('assets/Dateiname.avi')
     player.set_xwindow(frm_video.winfo_id())
-    player.set_media(Media)
+    player.set_media(media)
     player.audio_set_volume(100)
 
     # bottom section
+    # TODO: indicators for recording, vidoe/audio state
     frm_bottom = tk.Frame(master=window, width=500, height=20)
 
+    # TODO: video and sound record seperatly
     btn_record = tk.Button(master=frm_bottom, image=icon_mic, command='')
     btn_play = tk.Button(master=frm_bottom, image=icon_play, command=player.play)
     btn_pause = tk.Button(master=frm_bottom, image=icon_pause, command=lambda: player.set_pause(1))
@@ -67,3 +74,7 @@ if __name__ == '__main__':
     frm_bottom.pack(side=tk.BOTTOM)
 
     window.mainloop()
+
+
+if __name__ == "__main__":
+    init_main_window()

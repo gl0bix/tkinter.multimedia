@@ -7,6 +7,5 @@ opencv-python==4.5.5.64
 Pillow==9.1.0
 pycparser==2.21
 python-vlc==3.0.16120
-resampling==0.0.0
 sounddevice==0.4.4
 SoundFile==0.10.3.post1
