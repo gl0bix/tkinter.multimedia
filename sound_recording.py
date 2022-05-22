@@ -54,6 +54,6 @@ if __name__ == "__main__":
     stop = False
     root = tkinter.Tk()
     tkinter.Button(root, text="Start",
-                   command=lambda: prepare_rec(filename="Dateiname.wav", device_id=1)).pack()
+                   command=lambda: prepare_rec(filename="Dateiname.wav", device_id=13)).pack()
     tkinter.Button(root, text="Stop", command=stop_rec).pack()
     root.mainloop()
