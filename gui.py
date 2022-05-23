@@ -28,9 +28,9 @@ def __get_video_devices():
         if not cap.read()[0]:
             break
         else:
-            arr.append((index, cap.getBackendName()))
+            arr.append(str(index).rjust(2, '0') + cap.getBackendName())
         index += 1
-    arr.append((index, " Stream (URL needed)"))
+    arr.append(str(index).rjust(2, '0') + " Stream (URL needed)")
     return arr
 
 
@@ -50,32 +50,32 @@ def init_main_window():
     def __audio_record():
         try:
             # if last option choosed -> Stream
-            print(int(chosen_audio_input_device.get()[1]) )
-            print(audio_input_devices[-1])
-            if int(chosen_audio_input_device.get()[1]) == audio_input_devices[-1][0]:
+            print(chosen_audio_input_device.get()[0:2])
+            print(audio_input_devices[-1][0:2])
+            if int(chosen_audio_input_device.get()[0:2]) == int(audio_input_devices[-1][0:2]):
                 sound_recording_stream.prepare_rec(url=entry_for_url.get(), filename=entry_for_name.get())
+                print("h")
             else:
                 sound_recording.prepare_rec(int(chosen_audio_input_device.get()[1]), entry_for_name.get())
-        except:
+        except Exception as err:
             messagebox.showerror(title="Critical error",
-                                 message="Critical error - no recording started. Please try again.")
+                                 message=f"Critical error - no recording started. Please try again. \n{err}")
         else:
             btn_audio_record.config(image=icon_rec, state='disabled')
 
     def __video_record():
         # if stream, make button not grey
-        # EXCEPTIONHANDLING FALLS URL FALSCH IST!!!!
         stream = False
         try:
             # if last option choosed -> Stream
-            if int(chosen_video_input_device.get()[1]) == video_input_devices[-1][0]:
+            if int(chosen_video_input_device.get()[0:2]) == int(video_input_devices[-1][0:2]):
                 video_recording_stream.prepare_rec(url=entry_for_url.get(), filename=entry_for_name.get())
                 stream = True
             else:
                 video_recording.prepare_rec(int(chosen_video_input_device.get()[1]), entry_for_name.get())
-        except:
+        except Exception as err:
             messagebox.showerror(title="Critical error",
-                                 message="Critical error - no recording started. Please try again.")
+                                 message=f"Critical error - no recording started. Please try again. \n{err}")
         else:
             if not stream:
                 btn_video_record.config(image=icon_rec, state='disabled')
@@ -160,17 +160,18 @@ def init_main_window():
     btn_folder.pack(side=tk.LEFT, padx=2)
 
     # get input device options
-    audio_input_devices = [(sounddevice.query_devices().index(device), device.get('name'),)
+    audio_input_devices = [str(sounddevice.query_devices().index(device)).rjust(2, '0') + " " + device.get('name')
                            for device in sounddevice.query_devices()
                            if device.get('max_input_channels') > 0]
-    audio_input_devices.append((audio_input_devices[-1][0] + 1, "Stream (URL needed)"))
+    print()
+    audio_input_devices.append(str(int(audio_input_devices[-1][0:2]) + 1).rjust(2, '0') + " Stream (URL needed)")
     video_input_devices = __get_video_devices()
 
     chosen_audio_input_device = tk.StringVar(frm_top)
     chosen_video_input_device = tk.StringVar(frm_top)
 
     chosen_audio_input_device.set(audio_input_devices[0].__str__())
-    chosen_video_input_device.set(video_input_devices[0])
+    chosen_video_input_device.set(video_input_devices[0].__str__())
 
     drop_audio_input_devices = tk.OptionMenu(frm_top, chosen_audio_input_device, *audio_input_devices)
     drop_audio_input_devices.config(width=75)

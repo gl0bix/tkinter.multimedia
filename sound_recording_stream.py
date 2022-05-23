@@ -22,7 +22,7 @@ def prepare_rec(url, filename=None):
         filename = "str_" + datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".mp3"
     if filename.strip()[-3:] != "mp3":
         filename = filename.strip() + ".mp3"
-    filename = "../gui/assets/recordings/" + filename
+    filename = "./media/" + filename
     threading.Thread(target=record, args=(url, filename,)).start()
 
 

@@ -21,11 +21,12 @@ def record(url, filename):
 
 # example URL: "https://static-eus-rs.wondershare.com/Filmstock/file/s5/7a184ee5c5152b6f246640655570ec4e.mp4"
 def prepare_rec(url, filename=None):
-    if not url:
-        raise Exception("No URL given!")
+    s = requests.Session()
+    s.get(url, stream=True)
+    s.close()
     if not filename:
-        filename = "unnamed_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".mp4"
+        filename = "str_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".mp4"
     if filename.strip()[-3:] != "mp4":
         filename = filename.strip() + ".mp4"
-    filename = "../gui/assets/recordings/" + filename
+    filename = "./media/" + filename
     threading.Thread(target=record, args=(url, filename,)).start()
