@@ -1,7 +1,6 @@
 import datetime
 import queue
 import threading
-import tkinter
 
 import numpy
 import sounddevice
@@ -9,10 +8,12 @@ import soundfile
 
 assert numpy
 
-global stop
+stop = False
 
 
 def start_recording(filename, device_id, sample_rate):
+    global stop
+    stop = False
     q = queue.Queue()
 
     # Function to Copy audio_block from InputStream into Queue
@@ -32,7 +33,7 @@ def start_recording(filename, device_id, sample_rate):
 
 def prepare_rec(device_id=1, filename=None):
     if not filename:
-        filename = "unnamed_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".wav"
+        filename = "./media/rec_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".wav"
     if filename.strip()[-3:] != "wav":
         filename = filename.strip() + ".wav"
     samplerate = sounddevice.query_devices()[device_id]["default_samplerate"]
@@ -42,18 +43,5 @@ def prepare_rec(device_id=1, filename=None):
 def stop_rec():
     global stop
     stop = True
-    root.destroy()
 
 
-"""
-get device list with: 'python3 -m sounddevice'
-then check for devices with at least one input channel
-adjust device_id accordingly
-"""
-if __name__ == "__main__":
-    stop = False
-    root = tkinter.Tk()
-    tkinter.Button(root, text="Start",
-                   command=lambda: prepare_rec(filename="Dateiname.wav", device_id=13)).pack()
-    tkinter.Button(root, text="Stop", command=stop_rec).pack()
-    root.mainloop()

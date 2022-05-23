@@ -1,12 +1,14 @@
 import datetime
-import os
 import threading
-import tkinter
 
 import cv2
 
+stop = False
+
 
 def start_recording(filename, device_id):
+    global stop
+    stop = False
     cap = cv2.VideoCapture(device_id)
     cap.set(3, 1280)
     cap.set(4, 720)
@@ -26,7 +28,7 @@ def start_recording(filename, device_id):
 
 def prepare_rec(device_id=0, filename=None):
     if not filename:
-        filename = "unnamed_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".avi"
+        filename = "./media/rec_" + datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S') + ".avi"
     if filename.strip()[-3:] != "avi":
         filename = filename.strip() + ".avi"
     threading.Thread(target=start_recording, args=(filename, device_id,)).start()
@@ -35,33 +37,3 @@ def prepare_rec(device_id=0, filename=None):
 def stop_rec():
     global stop
     stop = True
-    root.destroy()
-
-
-def get_av_cams():
-    # Ablauf zum Bestimmen angeschlossener
-    index = 0
-    arr = []
-    i = 10
-    while i > 0:
-        cap = cv2.VideoCapture(index)
-        try:
-            if cap.getBackendName() == "MSMF":
-                arr.append(index)
-        except:
-            pass
-        cap.release()
-        index += 1
-        i -= 1
-    print(arr)
-
-
-if __name__ == "__main__":
-    stop = False
-    root = tkinter.Tk()
-    tkinter.Button(root, text="Start",
-                   command=lambda: prepare_rec(filename="Dateiname.avi", device_id=0)).pack()
-    tkinter.Button(root, text="Stop", command=stop_rec).pack()
-
-    get_av_cams()
-    root.mainloop()
