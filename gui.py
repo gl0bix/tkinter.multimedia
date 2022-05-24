@@ -15,8 +15,8 @@ import video_recording
 import sound_recording_stream
 import video_recording_stream
 
-PATH = os.path.dirname(__file__) + (r"\\media\\" if os.name == 'nt' else r"/media/")
-FILE_FORMATS = ('.avi', '.mp4', 'mp3', '.wav')
+PATH = os.path.dirname(__file__) + r"/media/"
+FILE_FORMATS = ('.avi', '.mp4', '.mp3', '.wav')
 
 
 # solution from: https://stackoverflow.com/questions/8044539/listing-available-devices-in-python-opencv
@@ -189,7 +189,8 @@ def init_main_window():
 
     # file list section
     frm_list = tk.Frame(master=window, width=400, height=700)  # , bg="White", borderwidth=1)
-    lbl_header = tk.Label(master=frm_list, text='tkinter \nmultimedia \nplayer', font=('Fira Mono', 23), justify=tk.LEFT)
+    lbl_header = tk.Label(master=frm_list, text='tkinter \nmultimedia \nplayer', font=('Fira Mono', 23),
+                          justify=tk.LEFT)
     lbl_header.pack(anchor="w")
     frm_list_box = tk.Frame(frm_list)
     lst_box_files = tk.Listbox(master=frm_list_box, width=30)
