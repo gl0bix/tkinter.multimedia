@@ -15,7 +15,7 @@ import video_recording
 import sound_recording_stream
 import video_recording_stream
 
-PATH = os.path.dirname(__file__) + r"\\media\\"
+PATH = os.path.dirname(__file__) + (r"\\media\\" if os.name == 'nt' else r"/media/")
 FILE_FORMATS = ('.avi', '.mp4', 'mp3', '.wav')
 
 
@@ -145,6 +145,7 @@ def init_main_window():
     icon_mic = Image.open('assets/images/icons/microphone.png').resize((20, 20))
     icon_cam = Image.open('assets/images/icons/video-camera.png').resize((20, 20))
     icon_rec = Image.open('assets/images/icons/icon_record.png').resize((20, 20))
+    icon_bin = Image.open('assets/images/icons/bin.png').resize((20, 20))
     icon_play = ImageTk.PhotoImage(icon_play)
     icon_pause = ImageTk.PhotoImage(icon_pause)
     icon_stop = ImageTk.PhotoImage(icon_stop)
@@ -152,6 +153,7 @@ def init_main_window():
     icon_mic = ImageTk.PhotoImage(icon_mic)
     icon_cam = ImageTk.PhotoImage(icon_cam)
     icon_rec = ImageTk.PhotoImage(icon_rec)
+    icon_bin = ImageTk.PhotoImage(icon_bin)
 
     # top menu  section
     frm_top = tk.Frame(master=window, width=500, height=20)
@@ -175,10 +177,10 @@ def init_main_window():
 
     drop_audio_input_devices = tk.OptionMenu(frm_top, chosen_audio_input_device, *audio_input_devices)
     drop_audio_input_devices.config(width=75)
-    lbl_audio_input_devices = tk.Label(master=frm_top, text="Select video device")
+    lbl_audio_input_devices = tk.Label(master=frm_top, text="Select audio device")
     drop_video_input_devices = tk.OptionMenu(frm_top, chosen_video_input_device, *video_input_devices)
     drop_video_input_devices.config(width=40)
-    lbl_video_input_devices = tk.Label(master=frm_top, text="Select audio device")
+    lbl_video_input_devices = tk.Label(master=frm_top, text="Select video device")
 
     drop_audio_input_devices.pack(side=tk.RIGHT)
     lbl_audio_input_devices.pack(side=tk.RIGHT)
@@ -187,11 +189,20 @@ def init_main_window():
 
     # file list section
     frm_list = tk.Frame(master=window, width=400, height=700)  # , bg="White", borderwidth=1)
-    lst_box_files = tk.Listbox(master=frm_list, width=23)
+    lbl_header = tk.Label(master=frm_list, text='tkinter \nmultimedia \nplayer', font=('Fira Mono', 23), justify=tk.LEFT)
+    lbl_header.pack(anchor="w")
+    frm_list_box = tk.Frame(frm_list)
+    lst_box_files = tk.Listbox(master=frm_list_box, width=30)
     __fill_lst_box_files()
+    lst_box_scrollbar = tk.Scrollbar(frm_list_box)
+    lst_box_scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
+    lst_box_files.config(yscrollcommand=lst_box_scrollbar.set)
+    lst_box_scrollbar.config(command=lst_box_files.yview)
+    lst_box_scrollbar.pack(anchor="w")
     lst_box_files.pack(anchor="w")
+    frm_list_box.pack(anchor="w")
     frm_list.pack(anchor="w")
-    btn_remove = tk.Button(master=frm_list, text="delete",
+    btn_remove = tk.Button(master=frm_list, image=icon_bin,
                            command=__delete_selected)
     btn_remove.pack(pady=4)
     tk.Label(master=frm_list, text="Filename for Recording:").pack(anchor="w")
@@ -203,7 +214,6 @@ def init_main_window():
 
     # video player section
     frm_video = tk.Frame(master=window, width=400, height=500)
-    lbl_video = tk.Label(master=frm_video)
     instance = vlc.Instance()
     player = instance.media_player_new()
     media = instance.media_new('')

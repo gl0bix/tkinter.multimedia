@@ -11,7 +11,7 @@ assert numpy
 stop = False
 
 
-def start_recording(filename, device_id, sample_rate):
+def start_recording(filename, device_id, sample_rate, channels):
     global stop
     stop = False
     q = queue.Queue()
@@ -21,9 +21,9 @@ def start_recording(filename, device_id, sample_rate):
         q.put(audio_block.copy())
 
     # create new soundfile
-    with soundfile.SoundFile(filename, mode='w', samplerate=sample_rate, channels=2) as file:
+    with soundfile.SoundFile(filename, mode='w', samplerate=sample_rate, channels=channels) as file:
         # Start InputStream (Callback = called periodically with recorded Data)
-        with sounddevice.InputStream(samplerate=sample_rate, channels=2, device=device_id, callback=callback):
+        with sounddevice.InputStream(samplerate=sample_rate, channels=channels, device=device_id, callback=callback):
             # check if new element in Queue and write it in File
             while True:
                 file.write(q.get())
@@ -37,7 +37,8 @@ def prepare_rec(device_id=1, filename=None):
     if filename.strip()[-3:] != "wav":
         filename = filename.strip() + ".wav"
     samplerate = sounddevice.query_devices()[device_id]["default_samplerate"]
-    threading.Thread(target=start_recording, args=(filename, device_id, int(samplerate))).start()
+    channels = sounddevice.query_devices()[device_id]["max_input_channels"]
+    threading.Thread(target=start_recording, args=(filename, device_id, int(samplerate), int(channels))).start()
 
 
 def stop_rec():
