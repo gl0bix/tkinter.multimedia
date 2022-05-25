@@ -1,5 +1,9 @@
 av==9.2.0
+certifi==2022.5.18.1
 cffi==1.15.0
+charset-normalizer==2.0.12
+ffpyplayer==4.3.5
+idna==3.3
 imageio==2.19.2
 imageio-ffmpeg==0.4.7
 numpy==1.22.3
@@ -7,5 +11,11 @@ opencv-python==4.5.5.64
 Pillow==9.1.0
 pycparser==2.21
 python-vlc==3.0.16120
+requests==2.27.1
+resampling==0.0.0
 sounddevice==0.4.4
 SoundFile==0.10.3.post1
+tkVideo==0.1
+tkvideoplayer==2.0.0
+ttkthemes==3.2.2
+urllib3==1.26.9
