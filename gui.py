@@ -11,8 +11,8 @@ import vlc
 from PIL import Image, ImageTk
 
 import sound_recording
-import video_recording
 import sound_recording_stream
+import video_recording
 import video_recording_stream
 
 PATH = os.path.dirname(__file__) + r"/media/"
@@ -49,9 +49,7 @@ def init_main_window():
 
     def __fill_lst_box_files(formats=None):
         current_shown = get_current_shown_formats()
-        if formats is None:
-            formats = current_shown
-        else:
+        if formats is not None:
             # if clicked formats not in shown formats -> put it in shown formats, else delete it from shown formats
             if not current_shown.intersection(formats):
                 current_shown.update(formats)
@@ -67,6 +65,18 @@ def init_main_window():
         lst_box_files.delete(0, 'end')
         for f in files[::-1]:
             lst_box_files.insert(tk.END, f)
+
+    def toggle_audio_btn():
+        if btn_list_audio.cget('relief') == tk.SUNKEN:
+            btn_list_audio.config(relief=tk.RAISED)
+        else:
+            btn_list_audio.config(relief=tk.SUNKEN)
+
+    def toggle_video_btn():
+        if btn_list_video.cget('relief') == tk.SUNKEN:
+            btn_list_video.config(relief=tk.RAISED)
+        else:
+            btn_list_video.config(relief=tk.SUNKEN)
 
     def __audio_record():
         try:
@@ -100,6 +110,8 @@ def init_main_window():
         else:
             if not stream:
                 btn_video_record.config(image=icon_rec, state='disabled')
+            else:
+                btn_video_record.config(image=icon_download, state='disabled')
 
     def __play_file(file=None):
         print('playing file')
@@ -167,6 +179,11 @@ def init_main_window():
     icon_cam = Image.open('assets/images/icons/video-camera.png').resize((20, 20))
     icon_rec = Image.open('assets/images/icons/icon_record.png').resize((20, 20))
     icon_bin = Image.open('assets/images/icons/bin.png').resize((20, 20))
+    icon_sort = Image.open('assets/images/icons/up-down.png').resize((20, 20))
+    icon_video_only = Image.open('assets/images/icons/movie-reel.png').resize((20, 20))
+    icon_audio_only = Image.open('assets/images/icons/speaker.png').resize((20, 20))
+    icon_download = Image.open('assets/images/icons/download.png').resize((20, 20))
+
     icon_play = ImageTk.PhotoImage(icon_play)
     icon_pause = ImageTk.PhotoImage(icon_pause)
     icon_stop = ImageTk.PhotoImage(icon_stop)
@@ -175,6 +192,10 @@ def init_main_window():
     icon_cam = ImageTk.PhotoImage(icon_cam)
     icon_rec = ImageTk.PhotoImage(icon_rec)
     icon_bin = ImageTk.PhotoImage(icon_bin)
+    icon_sort = ImageTk.PhotoImage(icon_sort)
+    icon_video_only = ImageTk.PhotoImage(icon_video_only)
+    icon_audio_only = ImageTk.PhotoImage(icon_audio_only)
+    icon_download = ImageTk.PhotoImage(icon_download)
 
     # top menu  section
     frm_top = tk.Frame(master=window, width=500, height=20)
@@ -214,12 +235,6 @@ def init_main_window():
                           justify=tk.LEFT)
     lbl_header.pack(anchor="w")
     frm_list_box = tk.Frame(frm_list)
-    btn_list_audio = tk.Button(master=frm_list_box, text="Audio", command=lambda: __fill_lst_box_files(AUDIO_FORMATS))
-    btn_list_video = tk.Button(master=frm_list_box, text="Video", command=lambda: __fill_lst_box_files(VIDEO_FORMATS))
-    btn_change_sorting = tk.Button(master=frm_list_box, text="sorting", command=__change_lst_box_files)
-    btn_list_audio.pack()
-    btn_list_video.pack()
-    btn_change_sorting.pack()
     lst_box_files = tk.Listbox(master=frm_list_box, width=30)
     __fill_lst_box_files()
     lst_box_scrollbar = tk.Scrollbar(frm_list_box)
@@ -229,16 +244,26 @@ def init_main_window():
     lst_box_scrollbar.pack(anchor="w")
     lst_box_files.pack(anchor="w")
     frm_list_box.pack(anchor="w")
-    frm_list.pack(anchor="w")
-    btn_remove = tk.Button(master=frm_list, image=icon_bin,
-                           command=__delete_selected)
-    btn_remove.pack(pady=4)
+
+    frm_list_btns = tk.Frame(master=frm_list)
+    btn_list_audio = tk.Button(master=frm_list_btns, image=icon_audio_only,
+                               command=lambda: [__fill_lst_box_files(AUDIO_FORMATS), toggle_audio_btn()])
+    btn_list_video = tk.Button(master=frm_list_btns, image=icon_video_only,
+                               command=lambda: [__fill_lst_box_files(VIDEO_FORMATS), toggle_video_btn()])
+    btn_change_sorting = tk.Button(master=frm_list_btns, image=icon_sort, command=__change_lst_box_files)
+    btn_remove = tk.Button(master=frm_list_btns, image=icon_bin, command=__delete_selected)
+    btn_list_audio.pack(side=tk.LEFT, padx=2, pady=4)
+    btn_list_video.pack(side=tk.LEFT, padx=2, pady=4)
+    btn_change_sorting.pack(side=tk.LEFT, padx=2, pady=4)
+    btn_remove.pack(side=tk.LEFT, padx=2, pady=4)
+    frm_list_btns.pack(anchor="w")
     tk.Label(master=frm_list, text="Filename for Recording:").pack(anchor="w")
     entry_for_name = tk.Entry(master=frm_list, width=23)
     entry_for_name.pack(anchor="w", pady=4)
     tk.Label(master=frm_list, text="URL to source (stream):").pack(anchor="w")
     entry_for_url = tk.Entry(master=frm_list, width=23)
     entry_for_url.pack(anchor="w", pady=4)
+    frm_list.pack(anchor="w")
 
     # video player section
     frm_video = tk.Frame(master=window, width=400, height=500)
@@ -275,8 +300,6 @@ def init_main_window():
     frm_list.pack(side=tk.LEFT)
     frm_video.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.BOTH)
     # frm_bottom.pack(side=tk.BOTTOM)
-
-    window.mainloop()
 
 
 if __name__ == "__main__":
