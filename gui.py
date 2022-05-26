@@ -16,7 +16,10 @@ import sound_recording_stream
 import video_recording_stream
 
 PATH = os.path.dirname(__file__) + r"/media/"
-FILE_FORMATS = ('.avi', '.mp4', '.mp3', '.wav')
+AUDIO_FORMATS = {'.mp3', '.wav'}
+VIDEO_FORMATS = {'.avi', '.mp4'}
+current_shown_formats = set()
+current_shown_formats.update(AUDIO_FORMATS, VIDEO_FORMATS)
 
 
 # solution from: https://stackoverflow.com/questions/8044539/listing-available-devices-in-python-opencv
@@ -34,17 +37,35 @@ def __get_video_devices():
     return arr
 
 
+def get_current_shown_formats():
+    return current_shown_formats
+
+
 def init_main_window():
     def __get_ask_open_file():
         file = filedialog.askopenfile()
         print(file)
         __play_file(file.name)
 
-    def __fill_lst_box_files():
+    def __fill_lst_box_files(formats=None):
+        current_shown = get_current_shown_formats()
+        if formats is None:
+            formats = current_shown
+        else:
+            # if clicked formats not in shown formats -> put it in shown formats, else delete it from shown formats
+            if not current_shown.intersection(formats):
+                current_shown.update(formats)
+            else:
+                current_shown.difference_update(formats)
         lst_box_files.delete(0, 'end')
-        files = [f for f in listdir(PATH) if isfile(join(PATH, f)) and f[-4:] in FILE_FORMATS]
-        print(*files)
+        files = [f for f in listdir(PATH) if isfile(join(PATH, f)) and f[-4:] in get_current_shown_formats()]
         for f in files:
+            lst_box_files.insert(tk.END, f)
+
+    def __change_lst_box_files():
+        files = lst_box_files.get(0, 'end')
+        lst_box_files.delete(0, 'end')
+        for f in files[::-1]:
             lst_box_files.insert(tk.END, f)
 
     def __audio_record():
@@ -193,6 +214,12 @@ def init_main_window():
                           justify=tk.LEFT)
     lbl_header.pack(anchor="w")
     frm_list_box = tk.Frame(frm_list)
+    btn_list_audio = tk.Button(master=frm_list_box, text="Audio", command=lambda: __fill_lst_box_files(AUDIO_FORMATS))
+    btn_list_video = tk.Button(master=frm_list_box, text="Video", command=lambda: __fill_lst_box_files(VIDEO_FORMATS))
+    btn_change_sorting = tk.Button(master=frm_list_box, text="sorting", command=__change_lst_box_files)
+    btn_list_audio.pack()
+    btn_list_video.pack()
+    btn_change_sorting.pack()
     lst_box_files = tk.Listbox(master=frm_list_box, width=30)
     __fill_lst_box_files()
     lst_box_scrollbar = tk.Scrollbar(frm_list_box)
