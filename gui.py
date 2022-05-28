@@ -301,6 +301,8 @@ def init_main_window():
     frm_video.pack(side=tk.RIGHT, expand=tk.YES, fill=tk.BOTH)
     # frm_bottom.pack(side=tk.BOTTOM)
 
+    window.mainloop()
+
 
 if __name__ == "__main__":
     init_main_window()
