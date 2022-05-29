@@ -112,6 +112,12 @@ def init_main_window():
                 btn_video_record.config(image=icon_rec, state='disabled')
             else:
                 btn_video_record.config(image=icon_download, state='disabled')
+                while not video_recording_stream.finished:
+                    tk.messagebox.showinfo(title="Download started", message="Press 'OK' to check if finished")
+                btn_video_record.config(image=icon_cam, state='active')
+                __fill_lst_box_files()
+
+
 
     def __play_file(file=None):
         print('playing file')

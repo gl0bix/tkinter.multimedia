@@ -3,6 +3,7 @@ import requests
 import threading
 
 global finished
+finished = True
 
 
 def record(url, filename):
@@ -21,6 +22,8 @@ def record(url, filename):
 
 # example URL: "https://static-eus-rs.wondershare.com/Filmstock/file/s5/7a184ee5c5152b6f246640655570ec4e.mp4"
 def prepare_rec(url, filename=None):
+    global finished
+    finished = False
     s = requests.Session()
     s.get(url, stream=True)
     s.close()
