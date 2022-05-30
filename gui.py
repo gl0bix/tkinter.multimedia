@@ -22,6 +22,7 @@ current_shown_formats = set()
 current_shown_formats.update(AUDIO_FORMATS, VIDEO_FORMATS)
 
 
+
 # solution from: https://stackoverflow.com/questions/8044539/listing-available-devices-in-python-opencv
 def __get_video_devices():
     index = 0
@@ -36,10 +37,8 @@ def __get_video_devices():
     arr.append(str(index).rjust(2, '0') + " Stream (URL needed)")
     return arr
 
-
 def get_current_shown_formats():
     return current_shown_formats
-
 
 def init_main_window():
     def __get_ask_open_file():
@@ -100,11 +99,13 @@ def init_main_window():
         try:
             # if last option choosed -> Stream
             if int(chosen_video_input_device.get()[0:2]) == int(video_input_devices[-1][0:2]):
+
                 stream_finished = tk.BooleanVar()
                 stream_finished.set(False)
                 stream_finished.trace(mode='w', callback=__vid_stream_finished)
                 video_recording_stream.prepare_rec(url=entry_for_url.get(), filename=entry_for_name.get(),
                                                    var=stream_finished)
+
                 stream = True
             else:
                 video_recording.prepare_rec(int(chosen_video_input_device.get()[1]), entry_for_name.get())
@@ -131,6 +132,7 @@ def init_main_window():
         else:
             if file[-4:] in AUDIO_FORMATS:
                 lbl_audio_indicator.config(image=icon_note)
+
             new_media = instance.media_new(file)
             player.set_media(new_media)
             t = threading.Thread(target=player.play)
@@ -151,6 +153,7 @@ def init_main_window():
         btn_audio_record.config(image=icon_mic, state='active')
         btn_video_record.config(image=icon_cam, state='active')
         lbl_audio_indicator.config(image='')
+
         __fill_lst_box_files()
 
     def __delete_selected():
@@ -209,6 +212,7 @@ def init_main_window():
     icon_audio_only = ImageTk.PhotoImage(icon_audio_only)
     icon_download = ImageTk.PhotoImage(icon_download)
     icon_note = ImageTk.PhotoImage(icon_note)
+
 
     # top menu  section
     frm_top = tk.Frame(master=window, width=500, height=20)
@@ -270,12 +274,14 @@ def init_main_window():
     btn_change_sorting.pack(side=tk.LEFT, padx=2, pady=4)
     btn_remove.pack(side=tk.LEFT, padx=2, pady=4)
     frm_list_btns.pack(anchor="w")
+
     tk.Label(master=frm_list, text="Filename for Recording:").pack(anchor="w")
     entry_for_name = tk.Entry(master=frm_list, width=23)
     entry_for_name.pack(anchor="w", pady=4)
     tk.Label(master=frm_list, text="URL to source (stream):").pack(anchor="w")
     entry_for_url = tk.Entry(master=frm_list, width=23)
     entry_for_url.pack(anchor="w", pady=4)
+
     frm_list.pack(anchor="w")
 
     # video player section

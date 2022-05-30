@@ -4,6 +4,7 @@ import threading
 
 
 def record(url, filename, var):
+
     file = open(filename, 'wb')
     chunk_size = 1024
 
@@ -26,4 +27,5 @@ def prepare_rec(url, filename=None, var=None):
     if filename.strip()[-3:] != "mp4":
         filename = filename.strip() + ".mp4"
     filename = "./media/" + filename
+
     threading.Thread(target=record, args=(url, filename, var)).start()
