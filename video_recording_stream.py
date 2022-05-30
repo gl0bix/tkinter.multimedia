@@ -2,11 +2,8 @@ import datetime
 import requests
 import threading
 
-global finished
-finished = True
 
-
-def record(url, filename):
+def record(url, filename, var):
     file = open(filename, 'wb')
     chunk_size = 1024
 
@@ -16,14 +13,11 @@ def record(url, filename):
             if chunk:
                 file.write(chunk)
         file.close()
-    global finished
-    finished = True
+    var.set(True)
 
 
 # example URL: "https://static-eus-rs.wondershare.com/Filmstock/file/s5/7a184ee5c5152b6f246640655570ec4e.mp4"
-def prepare_rec(url, filename=None):
-    global finished
-    finished = False
+def prepare_rec(url, filename=None, var=None):
     s = requests.Session()
     s.get(url, stream=True)
     s.close()
@@ -32,4 +26,4 @@ def prepare_rec(url, filename=None):
     if filename.strip()[-3:] != "mp4":
         filename = filename.strip() + ".mp4"
     filename = "./media/" + filename
-    threading.Thread(target=record, args=(url, filename,)).start()
+    threading.Thread(target=record, args=(url, filename, var)).start()
