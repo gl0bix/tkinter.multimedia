@@ -100,11 +100,11 @@ def init_main_window():
         try:
             # if last option choosed -> Stream
             if int(chosen_video_input_device.get()[0:2]) == int(video_input_devices[-1][0:2]):
-                stream_ready = tk.BooleanVar()
-                stream_ready.set(False)
-                stream_ready.trace(mode='w', callback=__vid_stream_ready)
+                stream_finished = tk.BooleanVar()
+                stream_finished.set(False)
+                stream_finished.trace(mode='w', callback=__vid_stream_finished)
                 video_recording_stream.prepare_rec(url=entry_for_url.get(), filename=entry_for_name.get(),
-                                                   var=stream_ready)
+                                                   var=stream_finished)
                 stream = True
             else:
                 video_recording.prepare_rec(int(chosen_video_input_device.get()[1]), entry_for_name.get())
@@ -117,7 +117,7 @@ def init_main_window():
             else:
                 btn_video_record.config(image=icon_download, state='disabled')
 
-    def __vid_stream_ready(*_):
+    def __vid_stream_finished(*_):
         btn_video_record.config(image=icon_cam, state='active')
         __fill_lst_box_files()
 
