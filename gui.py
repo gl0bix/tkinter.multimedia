@@ -129,6 +129,8 @@ def init_main_window():
         except IndexError:
             messagebox.showwarning(title="Nothing to play", message="Please chose a file from list")
         else:
+            if file[-4:] in AUDIO_FORMATS:
+                lbl_audio_indicator.config(image=icon_note)
             new_media = instance.media_new(file)
             player.set_media(new_media)
             t = threading.Thread(target=player.play)
@@ -148,6 +150,7 @@ def init_main_window():
         entry_for_name.delete(0, 'end')
         btn_audio_record.config(image=icon_mic, state='active')
         btn_video_record.config(image=icon_cam, state='active')
+        lbl_audio_indicator.config(image='')
         __fill_lst_box_files()
 
     def __delete_selected():
@@ -179,18 +182,19 @@ def init_main_window():
     # files.askopenfiles()
 
     # icons
-    icon_play = Image.open('assets/images/icons/play-button.png').resize((20, 20))
-    icon_pause = Image.open('assets/images/icons/pause-button.png').resize((20, 20))
-    icon_stop = Image.open('assets/images/icons/stop-button.png').resize((20, 20))
-    icon_folder = Image.open('assets/images/icons/folder.png').resize((20, 20))
-    icon_mic = Image.open('assets/images/icons/microphone.png').resize((20, 20))
-    icon_cam = Image.open('assets/images/icons/video-camera.png').resize((20, 20))
-    icon_rec = Image.open('assets/images/icons/icon_record.png').resize((20, 20))
-    icon_bin = Image.open('assets/images/icons/bin.png').resize((20, 20))
-    icon_sort = Image.open('assets/images/icons/up-down.png').resize((20, 20))
-    icon_video_only = Image.open('assets/images/icons/movie-reel.png').resize((20, 20))
-    icon_audio_only = Image.open('assets/images/icons/speaker.png').resize((20, 20))
-    icon_download = Image.open('assets/images/icons/download.png').resize((20, 20))
+    icon_play = Image.open('assets/images/icons/play-button.png').resize((40, 40))
+    icon_pause = Image.open('assets/images/icons/pause-button.png').resize((40, 40))
+    icon_stop = Image.open('assets/images/icons/stop-button.png').resize((40, 40))
+    icon_folder = Image.open('assets/images/icons/folder.png').resize((40, 40))
+    icon_mic = Image.open('assets/images/icons/microphone.png').resize((40, 40))
+    icon_cam = Image.open('assets/images/icons/video-camera.png').resize((40, 40))
+    icon_rec = Image.open('assets/images/icons/icon_record.png').resize((40, 40))
+    icon_bin = Image.open('assets/images/icons/bin.png').resize((40, 40))
+    icon_sort = Image.open('assets/images/icons/up-down.png').resize((40, 40))
+    icon_video_only = Image.open('assets/images/icons/movie-reel.png').resize((40, 40))
+    icon_audio_only = Image.open('assets/images/icons/speaker.png').resize((40, 40))
+    icon_download = Image.open('assets/images/icons/download.png').resize((40, 40))
+    icon_note = Image.open('assets/images/icons/musical-note.png')
 
     icon_play = ImageTk.PhotoImage(icon_play)
     icon_pause = ImageTk.PhotoImage(icon_pause)
@@ -204,6 +208,7 @@ def init_main_window():
     icon_video_only = ImageTk.PhotoImage(icon_video_only)
     icon_audio_only = ImageTk.PhotoImage(icon_audio_only)
     icon_download = ImageTk.PhotoImage(icon_download)
+    icon_note = ImageTk.PhotoImage(icon_note)
 
     # top menu  section
     frm_top = tk.Frame(master=window, width=500, height=20)
@@ -285,6 +290,9 @@ def init_main_window():
 
     player.set_media(media)
     player.audio_set_volume(100)
+
+    lbl_audio_indicator = tk.Label(master=frm_video)
+    lbl_audio_indicator.pack(pady=25, padx=25, anchor="center")
 
     # bottom section --> under file selection
     # frm_bottom = tk.Frame(master=window, width=500, height=20)
