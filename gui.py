@@ -22,7 +22,6 @@ current_shown_formats = set()
 current_shown_formats.update(AUDIO_FORMATS, VIDEO_FORMATS)
 
 
-
 # solution from: https://stackoverflow.com/questions/8044539/listing-available-devices-in-python-opencv
 def __get_video_devices():
     index = 0
@@ -37,8 +36,10 @@ def __get_video_devices():
     arr.append(str(index).rjust(2, '0') + " Stream (URL needed)")
     return arr
 
+
 def get_current_shown_formats():
     return current_shown_formats
+
 
 def init_main_window():
     def __get_ask_open_file():
@@ -149,6 +150,7 @@ def init_main_window():
         player.stop()
         sound_recording.stop_rec()
         video_recording.stop_rec()
+        sound_recording_stream.stop_rec()
         entry_for_name.delete(0, 'end')
         btn_audio_record.config(image=icon_mic, state='active')
         btn_video_record.config(image=icon_cam, state='active')
@@ -212,7 +214,6 @@ def init_main_window():
     icon_audio_only = ImageTk.PhotoImage(icon_audio_only)
     icon_download = ImageTk.PhotoImage(icon_download)
     icon_note = ImageTk.PhotoImage(icon_note)
-
 
     # top menu  section
     frm_top = tk.Frame(master=window, width=500, height=20)
